@@ -1,0 +1,11 @@
+version: '2'
+services:
+  apiauthorisation-postgresql:
+    image: postgres:12.1
+    # volumes:
+    #     - ~/volumes/jhipster/apiAuthorisation/postgresql/:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=apiAuthorisation
+      - POSTGRES_PASSWORD=
+    ports:
+      - 5432:5432

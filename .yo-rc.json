@@ -1,0 +1,37 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "com.boa.api"
+    },
+    "jhipsterVersion": "6.8.0",
+    "applicationType": "monolith",
+    "baseName": "apiAuthorisation",
+    "packageName": "com.boa.api",
+    "packageFolder": "com/boa/api",
+    "serverPort": "8080",
+    "authenticationType": "jwt",
+    "cacheProvider": "ehcache",
+    "enableHibernateCache": true,
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "postgresql",
+    "prodDatabaseType": "postgresql",
+    "searchEngine": false,
+    "messageBroker": false,
+    "serviceDiscoveryType": false,
+    "buildTool": "maven",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "ZWQ2MmQ2ODFiMjQ5MWJmMmVhOTQ3Y2E3YzBlMWYxOWVjZTQ2Y2VmYWRiMWI4NTA0YTljM2FiMmYyNjVkOWEzN2NlNTg5ZTM5ZjU5ODIyYTE2OTg3MzFiYzVjMzE2NDMzYzY4MThlM2M1NWEwNjcyZTRlODJiZDQzZWRjNGRlZGQ=",
+    "embeddableLaunchScript": false,
+    "creationTimestamp": 1591778262209,
+    "testFrameworks": [],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [],
+    "enableTranslation": false,
+    "clientPackageManager": "npm",
+    "blueprints": [],
+    "skipClient": true
+  }
+}

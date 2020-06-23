@@ -6,6 +6,8 @@ import com.boa.api.web.rest.errors.BadRequestAlertException;
 
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
+import springfox.documentation.annotations.ApiIgnore;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +24,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api")
+@ApiIgnore
 public class ParamEndPointResource {
 
     private final Logger log = LoggerFactory.getLogger(ParamEndPointResource.class);

@@ -44,7 +44,7 @@ public class ApiService {
     }
 
     public AuthorisationResponse authorisation(AuthorisationRequest authoRequest, HttpServletRequest request) {
-        log.info("Enter in authorisation [{}]", authoRequest);
+        log.info("Enter in authorisation=== [{}]", authoRequest);
         AuthorisationResponse genericResp = new AuthorisationResponse();
         Tracking tracking = new Tracking();
         tracking.setDateRequest(Instant.now());
@@ -62,13 +62,14 @@ public class ApiService {
         try {
 
             String jsonStr = new JSONObject().put("montant", authoRequest.getMontant())
+                    .put("operateur", authoRequest.getOperation())
                     .put("referencetransfert", authoRequest.getReferenceTransfert())
                     .put("numerotransaction", authoRequest.getNumeroTransaction())
                     .put("compte_emetteur", authoRequest.getCompteEmetteur())
                     .put("disponible", authoRequest.getDisponible())
                     .put("valdisponible", authoRequest.getValDisponible()).put("country", authoRequest.getCountry())
                     .put("mntfrais", authoRequest.getMntFrais()).put("libelle", authoRequest.getLibelle())
-                    .put("compte_crediteur", authoRequest.getCompteEmetteur()).put("codAuto", authoRequest.getCodAuto())
+                    .put("compte_crediteur", authoRequest.getCompteCrediteur()).put("codAuto", authoRequest.getCodAuto())
                     .toString();
 
             log.info("request confirmation [{}]", jsonStr);

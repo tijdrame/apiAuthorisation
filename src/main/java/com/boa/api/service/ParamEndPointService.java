@@ -2,14 +2,12 @@ package com.boa.api.service;
 
 import com.boa.api.domain.ParamEndPoint;
 import com.boa.api.repository.ParamEndPointRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service Implementation for managing {@link ParamEndPoint}.
@@ -68,5 +66,11 @@ public class ParamEndPointService {
     public void delete(Long id) {
         log.debug("Request to delete ParamEndPoint : {}", id);
         paramEndPointRepository.deleteById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public ParamEndPoint findByCodeParam(String codeparam) {
+        log.debug("Request to get all ParamEndPoints");
+        return paramEndPointRepository.findByCodeParam(codeparam);
     }
 }

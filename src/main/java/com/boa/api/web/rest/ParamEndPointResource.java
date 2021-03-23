@@ -3,19 +3,17 @@ package com.boa.api.web.rest;
 import com.boa.api.domain.ParamEndPoint;
 import com.boa.api.service.ParamEndPointService;
 import com.boa.api.web.rest.errors.BadRequestAlertException;
-
-import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.ResponseUtil;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
+import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing {@link com.boa.api.domain.ParamEndPoint}.
@@ -51,7 +49,8 @@ public class ParamEndPointResource {
             throw new BadRequestAlertException("A new paramEndPoint cannot already have an ID", ENTITY_NAME, "idexists");
         }
         ParamEndPoint result = paramEndPointService.save(paramEndPoint);
-        return ResponseEntity.created(new URI("/api/param-end-points/" + result.getId()))
+        return ResponseEntity
+            .created(new URI("/api/param-end-points/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
@@ -72,7 +71,8 @@ public class ParamEndPointResource {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         ParamEndPoint result = paramEndPointService.save(paramEndPoint);
-        return ResponseEntity.ok()
+        return ResponseEntity
+            .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, paramEndPoint.getId().toString()))
             .body(result);
     }
@@ -111,6 +111,9 @@ public class ParamEndPointResource {
     public ResponseEntity<Void> deleteParamEndPoint(@PathVariable Long id) {
         log.debug("REST request to delete ParamEndPoint : {}", id);
         paramEndPointService.delete(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

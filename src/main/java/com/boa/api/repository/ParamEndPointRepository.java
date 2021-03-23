@@ -1,7 +1,6 @@
 package com.boa.api.repository;
 
 import com.boa.api.domain.ParamEndPoint;
-
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
@@ -11,4 +10,5 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface ParamEndPointRepository extends JpaRepository<ParamEndPoint, Long> {
+    ParamEndPoint findByCodeParam(String codeparam);
 }

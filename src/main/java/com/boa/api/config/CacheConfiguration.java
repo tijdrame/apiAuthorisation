@@ -42,8 +42,8 @@ public class CacheConfiguration {
             createCache(cm, com.boa.api.domain.User.class.getName());
             createCache(cm, com.boa.api.domain.Authority.class.getName());
             createCache(cm, com.boa.api.domain.User.class.getName() + ".authorities");
-            createCache(cm, com.boa.api.domain.Tracking.class.getName());
             createCache(cm, com.boa.api.domain.ParamEndPoint.class.getName());
+            createCache(cm, com.boa.api.domain.Tracking.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }

@@ -3,7 +3,6 @@ package com.boa.api;
 import com.boa.api.config.ApplicationProperties;
 
 import io.github.jhipster.config.DefaultProfileUtil;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import io.github.jhipster.config.JHipsterConstants;
 
 import org.apache.commons.lang3.StringUtils;
@@ -22,7 +21,6 @@ import java.util.Arrays;
 import java.util.Collection;
 
 @SpringBootApplication
-@EnableSwagger2
 @EnableConfigurationProperties({LiquibaseProperties.class, ApplicationProperties.class})
 public class ApiAuthorisationApp {
 

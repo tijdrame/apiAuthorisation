@@ -69,10 +69,4 @@ public class ParamEndPointService {
         log.debug("Request to delete ParamEndPoint : {}", id);
         paramEndPointRepository.deleteById(id);
     }
-
-    @Transactional(readOnly = true)
-    public ParamEndPoint findByCodeParam(String codeparam) {
-        log.debug("Request to get all ParamEndPoints");
-        return paramEndPointRepository.findByCodeParam(codeparam);
-    }
 }

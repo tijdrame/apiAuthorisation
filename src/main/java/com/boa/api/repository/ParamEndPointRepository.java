@@ -11,6 +11,4 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface ParamEndPointRepository extends JpaRepository<ParamEndPoint, Long> {
-
-	ParamEndPoint findByCodeParam(String codeparam);
 }

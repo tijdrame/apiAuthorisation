@@ -1,9 +1,9 @@
 package com.boa.api.repository.timezone;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.time.*;
 import java.util.Objects;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "jhi_date_time_wrapper")
@@ -119,6 +119,7 @@ public class DateTimeWrapper implements Serializable {
         return Objects.hashCode(getId());
     }
 
+    // prettier-ignore
     @Override
     public String toString() {
         return "TimeZoneTest{" +

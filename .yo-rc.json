@@ -3,7 +3,7 @@
     "promptValues": {
       "packageName": "com.boa.api"
     },
-    "jhipsterVersion": "6.8.0",
+    "jhipsterVersion": "7.0.0",
     "applicationType": "monolith",
     "baseName": "apiAuthorisation",
     "packageName": "com.boa.api",
@@ -32,6 +32,18 @@
     "enableTranslation": false,
     "clientPackageManager": "npm",
     "blueprints": [],
-    "skipClient": true
+    "skipClient": true,
+    "skipServer": false,
+    "skipUserManagement": false,
+    "skipCheckLengthOfIdentifier": false,
+    "skipFakeData": false,
+    "pages": [],
+    "nativeLanguage": "en",
+    "languages": ["en", "fr"],
+    "reactive": false,
+    "clientFramework": "angularX",
+    "clientTheme": "none",
+    "clientThemeVariant": "",
+    "withAdminUi": true
   }
 }

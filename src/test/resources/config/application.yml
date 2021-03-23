@@ -14,11 +14,14 @@
 # ===================================================================
 
 spring:
+  profiles:
+    # Uncomment the following line to enable tests against production database type rather than H2, using Testcontainers
+    #active: testcontainers
   application:
     name: apiAuthorisation
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:h2:mem:apiAuthorisation;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    url: jdbc:h2:mem:apiauthorisation;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     name:
     username:
     password:
@@ -28,9 +31,8 @@ spring:
     serialization:
       write-durations-as-timestamps: false
   jpa:
-    database-platform: io.github.jhipster.domain.util.FixedH2Dialect
+    database-platform: tech.jhipster.domain.util.FixedH2Dialect
     open-in-view: false
-    show-sql: false
     hibernate:
       ddl-auto: none
       naming:
@@ -44,6 +46,7 @@ spring:
       hibernate.generate_statistics: false
       hibernate.hbm2ddl.auto: validate
       hibernate.jdbc.time_zone: UTC
+      hibernate.query.fail_on_pagination_over_collection_fetch: true
   liquibase:
     contexts: test
   mail:
@@ -52,9 +55,6 @@ spring:
     allow-bean-definition-overriding: true
   messages:
     basename: i18n/messages
-  mvc:
-    favicon:
-      enabled: false
   task:
     execution:
       thread-name-prefix: api-authorisation-task-
@@ -84,7 +84,7 @@ jhipster:
     name: 'apiAuthorisationApp'
   logging:
     # To test json console appender
-    use-json-format: true # By default, logs are in Json format
+    use-json-format: false
     logstash:
       enabled: false
       host: localhost
@@ -100,11 +100,6 @@ jhipster:
         base64-secret: ZWQ2MmQ2ODFiMjQ5MWJmMmVhOTQ3Y2E3YzBlMWYxOWVjZTQ2Y2VmYWRiMWI4NTA0YTljM2FiMmYyNjVkOWEzN2NlNTg5ZTM5ZjU5ODIyYTE2OTg3MzFiYzVjMzE2NDMzYzY4MThlM2M1NWEwNjcyZTRlODJiZDQzZWRjNGRlZGQ=
         # Token is valid 24 hours
         token-validity-in-seconds: 86400
-  metrics:
-    logs: # Reports metrics in the logs
-      enabled: true
-      report-frequency: 60 # in seconds
-
 # ===================================================================
 # Application specific properties
 # Add your own application properties here, see the ApplicationProperties class

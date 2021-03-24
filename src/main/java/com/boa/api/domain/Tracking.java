@@ -1,15 +1,13 @@
 package com.boa.api.domain;
 
+import java.io.Serializable;
+import java.time.Instant;
+import java.util.Objects;
+import javax.persistence.*;
+import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Type;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
-
-import java.io.Serializable;
-import java.util.Objects;
-import java.time.Instant;
 
 /**
  * A Tracking.
@@ -22,8 +20,8 @@ public class Tracking implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator")
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "tracking_seq_gen")
+    @SequenceGenerator(name = "tracking_seq_gen", sequenceName = "tracking_id_seq", initialValue = 1, allocationSize = 1)
     private Long id;
 
     @NotNull
@@ -50,13 +48,11 @@ public class Tracking implements Serializable {
     @Column(name = "date_response", nullable = false)
     private Instant dateResponse;
 
-    
     @Lob
     @Type(type = "org.hibernate.type.TextType")
     @Column(name = "request_tr", nullable = false)
     private String requestTr;
 
-    
     @Lob
     @Type(type = "org.hibernate.type.TextType")
     @Column(name = "response_tr", nullable = false)
@@ -174,6 +170,7 @@ public class Tracking implements Serializable {
     public void setResponseTr(String responseTr) {
         this.responseTr = responseTr;
     }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -194,16 +191,35 @@ public class Tracking implements Serializable {
 
     @Override
     public String toString() {
-        return "Tracking{" +
-            "id=" + getId() +
-            ", codeResponse='" + getCodeResponse() + "'" +
-            ", endPoint='" + getEndPoint() + "'" +
-            ", loginActeur='" + getLoginActeur() + "'" +
-            ", requestId='" + getRequestId() + "'" +
-            ", dateRequest='" + getDateRequest() + "'" +
-            ", dateResponse='" + getDateResponse() + "'" +
-            ", requestTr='" + getRequestTr() + "'" +
-            ", responseTr='" + getResponseTr() + "'" +
-            "}";
+        return (
+            "Tracking{" +
+            "id=" +
+            getId() +
+            ", codeResponse='" +
+            getCodeResponse() +
+            "'" +
+            ", endPoint='" +
+            getEndPoint() +
+            "'" +
+            ", loginActeur='" +
+            getLoginActeur() +
+            "'" +
+            ", requestId='" +
+            getRequestId() +
+            "'" +
+            ", dateRequest='" +
+            getDateRequest() +
+            "'" +
+            ", dateResponse='" +
+            getDateResponse() +
+            "'" +
+            ", requestTr='" +
+            getRequestTr() +
+            "'" +
+            ", responseTr='" +
+            getResponseTr() +
+            "'" +
+            "}"
+        );
     }
 }

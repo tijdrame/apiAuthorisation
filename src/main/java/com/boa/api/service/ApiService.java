@@ -1,23 +1,22 @@
 package com.boa.api.service;
 
+import com.boa.api.domain.ParamEndPoint;
+import com.boa.api.domain.Tracking;
+import com.boa.api.request.AnnulationRequest;
+import com.boa.api.request.AuthorisationRequest;
+import com.boa.api.request.GetCommissionRequest;
+import com.boa.api.response.AnnulationResponse;
+import com.boa.api.response.AuthorisationResponse;
+import com.boa.api.response.GetCommissionResponse;
+import com.boa.api.utils.ICodeDescResponse;
+import com.boa.api.utils.Utils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.time.Instant;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
-
-import com.boa.api.domain.ParamEndPoint;
-import com.boa.api.domain.Tracking;
-import com.boa.api.request.AnnulationRequest;
-import com.boa.api.request.AuthorisationRequest;
-import com.boa.api.response.AnnulationResponse;
-import com.boa.api.response.AuthorisationResponse;
-import com.boa.api.utils.ICodeDescResponse;
-import com.boa.api.utils.Utils;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
@@ -35,8 +34,7 @@ public class ApiService {
     private final Utils utils;
     private final ParamEndPointService endPointService;
 
-    public ApiService(TrackingService trackingService, UserService userService, Utils utils,
-            ParamEndPointService endPointService) {
+    public ApiService(TrackingService trackingService, UserService userService, Utils utils, ParamEndPointService endPointService) {
         this.trackingService = trackingService;
         this.userService = userService;
         this.utils = utils;
@@ -54,23 +52,45 @@ public class ApiService {
             genericResp.setCode(ICodeDescResponse.ECHEC_CODE);
             genericResp.setDescription(ICodeDescResponse.SERVICE_ABSENT_DESC);
             genericResp.setDateResponse(Instant.now());
-            tracking = createTracking(tracking, ICodeDescResponse.ECHEC_CODE, "authorisation", genericResp.toString(),
-                    authoRequest.toString(), genericResp.getResponseReference());
+            tracking =
+                createTracking(
+                    tracking,
+                    ICodeDescResponse.ECHEC_CODE,
+                    "authorisation",
+                    genericResp.toString(),
+                    authoRequest.toString(),
+                    genericResp.getResponseReference()
+                );
             trackingService.save(tracking);
             return genericResp;
         }
-        try {
 
-            String jsonStr = new JSONObject().put("montant", authoRequest.getMontant())
-                    .put("operateur", authoRequest.getOperation())
-                    .put("referencetransfert", authoRequest.getReferenceTransfert())
-                    .put("numerotransaction", authoRequest.getNumeroTransaction())
-                    .put("compte_emetteur", authoRequest.getCompteEmetteur())
-                    .put("disponible", authoRequest.getDisponible())
-                    .put("valdisponible", authoRequest.getValDisponible()).put("country", authoRequest.getCountry())
-                    .put("mntfrais", authoRequest.getMntFrais()).put("libelle", authoRequest.getLibelle())
-                    .put("compte_crediteur", authoRequest.getCompteCrediteur()).put("codAuto", authoRequest.getCodAuto())
-                    .toString();
+        /*GetCommissionRequest commissionRequest = new GetCommissionRequest();
+        commissionRequest.codeOperation(optionalPM.get().getVarString2()).compte(authoRequest.getCompteCardTarget()).country(authoRequest.getCountry())
+        .devise("").montant(Double.valueOf(authoRequest.getMontant())).langue(authoRequest.getLangue());
+        GetCommissionResponse commissionResponse = getCommission(commissionRequest, request);
+        if(commissionResponse==null || commissionResponse.getCode().equals("200")){
+            genericResp = (AuthorisationResponse) clientAbsent(genericResp, tracking, request.getRequestURI(),
+                ICodeDescResponse.ECHEC_CODE, 
+                commissionResponse!=null?commissionResponse.getRMessage():ICodeDescResponse.FRAIS_NON_REMONTEE,
+                    request.getRequestURI(), tab[1]);
+        return genericResp;
+        }*/
+        try {
+            String jsonStr = new JSONObject()
+                .put("montant", authoRequest.getMontant())
+                .put("operateur", authoRequest.getOperation())
+                .put("referencetransfert", authoRequest.getReferenceTransfert())
+                .put("numerotransaction", authoRequest.getNumeroTransaction())
+                .put("compte_emetteur", authoRequest.getCompteEmetteur())
+                .put("disponible", authoRequest.getDisponible())
+                .put("valdisponible", authoRequest.getValDisponible())
+                .put("country", authoRequest.getCountry())
+                .put("mntfrais", authoRequest.getMntFrais())
+                .put("libelle", authoRequest.getLibelle())
+                .put("compte_crediteur", authoRequest.getCompteCrediteur())
+                .put("codAuto", authoRequest.getCodAuto())
+                .toString();
 
             log.info("request confirmation [{}]", jsonStr);
             HttpURLConnection conn = utils.doConnexion(endPoint.getEndPoints(), jsonStr, "application/json", "");
@@ -94,14 +114,28 @@ public class ApiService {
                     genericResp.setCode(ICodeDescResponse.SUCCES_CODE);
                     genericResp.setDescription(ICodeDescResponse.SUCCES_DESCRIPTION);
                     genericResp.setDateResponse(Instant.now());
-                    tracking = createTracking(tracking, ICodeDescResponse.SUCCES_CODE, request.getRequestURI(), result,
-                            authoRequest.toString(), genericResp.getResponseReference());
+                    tracking =
+                        createTracking(
+                            tracking,
+                            ICodeDescResponse.SUCCES_CODE,
+                            request.getRequestURI(),
+                            result,
+                            authoRequest.toString(),
+                            genericResp.getResponseReference()
+                        );
                 } else {
                     genericResp.setCode(ICodeDescResponse.ECHEC_CODE);
                     genericResp.setDateResponse(Instant.now());
                     genericResp.setDescription(ICodeDescResponse.ECHEC_DESCRIPTION);
-                    tracking = createTracking(tracking, ICodeDescResponse.ECHEC_CODE, request.getRequestURI(), result,
-                            authoRequest.toString(), genericResp.getResponseReference());
+                    tracking =
+                        createTracking(
+                            tracking,
+                            ICodeDescResponse.ECHEC_CODE,
+                            request.getRequestURI(),
+                            result,
+                            authoRequest.toString(),
+                            genericResp.getResponseReference()
+                        );
                 }
             } else {
                 // conn =null
@@ -118,16 +152,30 @@ public class ApiService {
                 genericResp.setCode(ICodeDescResponse.ECHEC_CODE);
                 genericResp.setDateResponse(Instant.now());
                 genericResp.setDescription(ICodeDescResponse.ECHEC_DESCRIPTION);
-                tracking = createTracking(tracking, ICodeDescResponse.ECHEC_CODE, request.getRequestURI(),
-                        genericResp.toString(), authoRequest.toString(), genericResp.getResponseReference());
+                tracking =
+                    createTracking(
+                        tracking,
+                        ICodeDescResponse.ECHEC_CODE,
+                        request.getRequestURI(),
+                        genericResp.toString(),
+                        authoRequest.toString(),
+                        genericResp.getResponseReference()
+                    );
             }
         } catch (Exception e) {
             log.error("Exception in authorisation [{}]", e);
             genericResp.setCode(ICodeDescResponse.ECHEC_CODE);
             genericResp.setDateResponse(Instant.now());
             genericResp.setDescription(ICodeDescResponse.ECHEC_DESCRIPTION);
-            tracking = createTracking(tracking, ICodeDescResponse.ECHEC_CODE, request.getRequestURI(), e.getMessage(),
-                    authoRequest.toString(), genericResp.getResponseReference());
+            tracking =
+                createTracking(
+                    tracking,
+                    ICodeDescResponse.ECHEC_CODE,
+                    request.getRequestURI(),
+                    e.getMessage(),
+                    authoRequest.toString(),
+                    genericResp.getResponseReference()
+                );
         }
         trackingService.save(tracking);
         return genericResp;
@@ -144,16 +192,24 @@ public class ApiService {
             genericResp.setCode(ICodeDescResponse.ECHEC_CODE);
             genericResp.setDescription(ICodeDescResponse.SERVICE_ABSENT_DESC);
             genericResp.setDateResponse(Instant.now());
-            tracking = createTracking(tracking, ICodeDescResponse.ECHEC_CODE, "authorisation", genericResp.toString(),
-                    annuRequest.toString(), genericResp.getResponseReference());
+            tracking =
+                createTracking(
+                    tracking,
+                    ICodeDescResponse.ECHEC_CODE,
+                    "authorisation",
+                    genericResp.toString(),
+                    annuRequest.toString(),
+                    genericResp.getResponseReference()
+                );
             trackingService.save(tracking);
             return genericResp;
         }
         try {
-
-            String jsonStr = new JSONObject().put("referencetransfert", annuRequest.getReferenceTransfert())
-                    .put("codeoperateur", annuRequest.getOperation()).put("country", annuRequest.getCountry())
-                    .toString();
+            String jsonStr = new JSONObject()
+                .put("referencetransfert", annuRequest.getReferenceTransfert())
+                .put("codeoperateur", annuRequest.getOperation())
+                .put("country", annuRequest.getCountry())
+                .toString();
 
             log.info("request confirmation [{}]", jsonStr);
             HttpURLConnection conn = utils.doConnexion(endPoint.getEndPoints(), jsonStr, "application/json", "");
@@ -177,14 +233,28 @@ public class ApiService {
                     genericResp.setCode(ICodeDescResponse.SUCCES_CODE);
                     genericResp.setDescription(ICodeDescResponse.SUCCES_DESCRIPTION);
                     genericResp.setDateResponse(Instant.now());
-                    tracking = createTracking(tracking, ICodeDescResponse.SUCCES_CODE, request.getRequestURI(), result,
-                            annuRequest.toString(), genericResp.getResponseReference());
+                    tracking =
+                        createTracking(
+                            tracking,
+                            ICodeDescResponse.SUCCES_CODE,
+                            request.getRequestURI(),
+                            result,
+                            annuRequest.toString(),
+                            genericResp.getResponseReference()
+                        );
                 } else {
                     genericResp.setCode(ICodeDescResponse.ECHEC_CODE);
                     genericResp.setDateResponse(Instant.now());
                     genericResp.setDescription(ICodeDescResponse.ECHEC_DESCRIPTION);
-                    tracking = createTracking(tracking, ICodeDescResponse.ECHEC_CODE, request.getRequestURI(), result,
-                            annuRequest.toString(), genericResp.getResponseReference());
+                    tracking =
+                        createTracking(
+                            tracking,
+                            ICodeDescResponse.ECHEC_CODE,
+                            request.getRequestURI(),
+                            result,
+                            annuRequest.toString(),
+                            genericResp.getResponseReference()
+                        );
                 }
             } else {
                 // conn =null
@@ -201,23 +271,157 @@ public class ApiService {
                 genericResp.setCode(ICodeDescResponse.ECHEC_CODE);
                 genericResp.setDateResponse(Instant.now());
                 genericResp.setDescription(ICodeDescResponse.ECHEC_DESCRIPTION);
-                tracking = createTracking(tracking, ICodeDescResponse.ECHEC_CODE, request.getRequestURI(),
-                        genericResp.toString(), annuRequest.toString(), genericResp.getResponseReference());
+                tracking =
+                    createTracking(
+                        tracking,
+                        ICodeDescResponse.ECHEC_CODE,
+                        request.getRequestURI(),
+                        genericResp.toString(),
+                        annuRequest.toString(),
+                        genericResp.getResponseReference()
+                    );
             }
         } catch (Exception e) {
             log.error("Exception in annulation [{}]", e);
             genericResp.setCode(ICodeDescResponse.ECHEC_CODE);
             genericResp.setDateResponse(Instant.now());
             genericResp.setDescription(ICodeDescResponse.ECHEC_DESCRIPTION);
-            tracking = createTracking(tracking, ICodeDescResponse.ECHEC_CODE, request.getRequestURI(), e.getMessage(),
-                    annuRequest.toString(), genericResp.getResponseReference());
+            tracking =
+                createTracking(
+                    tracking,
+                    ICodeDescResponse.ECHEC_CODE,
+                    request.getRequestURI(),
+                    e.getMessage(),
+                    annuRequest.toString(),
+                    genericResp.getResponseReference()
+                );
         }
         trackingService.save(tracking);
         return genericResp;
     }
 
-    public Tracking createTracking(Tracking tracking, String code, String endPoint, String result, String req,
-            String reqId) {
+    public GetCommissionResponse getCommission(GetCommissionRequest commissionRequest, HttpServletRequest request) {
+        log.info("in get Commision [{}]", commissionRequest);
+        GetCommissionResponse genericResponse = new GetCommissionResponse();
+        Tracking tracking = new Tracking();
+        String autho = request.getHeader("Authorization");
+        String[] tab = autho.split("Bearer");
+        ParamEndPoint filiale = endPointService.findByCodeParam("getCommission");
+        String result = "";
+        tracking.setDateRequest(Instant.now());
+        try {
+            if (filiale == null) {
+                genericResponse.setCode(ICodeDescResponse.ECHEC_CODE);
+                genericResponse.setDescription(ICodeDescResponse.SERVICE_ABSENT_DESC);
+                genericResponse.setDateResponse(Instant.now());
+                tracking =
+                    createTracking(
+                        tracking,
+                        ICodeDescResponse.ECHEC_CODE,
+                        "getCommission",
+                        genericResponse.toString(),
+                        commissionRequest.toString(),
+                        genericResponse.getResponseReference()
+                    );
+                trackingService.save(tracking);
+                return genericResponse;
+            }
+            String jsonString = new JSONObject()
+                .put("montant", commissionRequest.getMontant())
+                .put("devise", commissionRequest.getDevise())
+                .put("codeoper", commissionRequest.getCodeOperation())
+                .put("compte", commissionRequest.getCompte())
+                .put("country", commissionRequest.getCountry())
+                .toString();
+
+            BufferedReader br = null;
+            JSONObject obj = new JSONObject();
+            // String result = "";
+            HttpURLConnection conn = utils.doConnexion(filiale.getEndPoints(), jsonString, "application/json", null);
+            if (conn != null && conn.getResponseCode() == 200) {
+                br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                String ligne = br.readLine();
+                while (ligne != null) {
+                    result += ligne;
+                    ligne = br.readLine();
+                }
+                log.info("getCommission result ===== [{}]", result);
+                obj = new JSONObject(result);
+                obj = obj.getJSONObject("data");
+                if (
+                    obj.toString() != null &&
+                    !obj.isNull("rcommission") &&
+                    obj.toString().contains("rcode") &&
+                    obj.getJSONObject("rcommission").getString("rcode").equals("00")
+                ) {
+                    genericResponse.setCode(ICodeDescResponse.SUCCES_CODE);
+                    genericResponse.setDateResponse(Instant.now());
+                    genericResponse.setDescription(ICodeDescResponse.SUCCES_DESCRIPTION);
+                    genericResponse.setMontantCommission(obj.getJSONObject("rcommission").getDouble("commission"));
+                    tracking =
+                        createTracking(
+                            tracking,
+                            ICodeDescResponse.SUCCES_CODE,
+                            filiale.getEndPoints(),
+                            result,
+                            commissionRequest.toString(),
+                            genericResponse.getResponseReference()
+                        );
+                } else if (
+                    obj.toString() != null &&
+                    !obj.isNull("rcommission") &&
+                    obj.toString().contains("rcode") &&
+                    !obj.getJSONObject("rcommission").getString("rcode").equals("00")
+                ) {
+                    genericResponse.setCode(ICodeDescResponse.ECHEC_CODE);
+                    genericResponse.setDateResponse(Instant.now());
+                    genericResponse.setDescription(ICodeDescResponse.ECHEC_DESCRIPTION);
+                    genericResponse.setRCode(obj.getJSONObject("rcommission").getString("rcode"));
+                    genericResponse.setRMessage(obj.getJSONObject("rcommission").getString("rmessage"));
+                    tracking =
+                        createTracking(
+                            tracking,
+                            ICodeDescResponse.ECHEC_CODE,
+                            filiale.getEndPoints(),
+                            result,
+                            commissionRequest.toString(),
+                            genericResponse.getResponseReference()
+                        );
+                }
+            } else {
+                genericResponse.setCode(ICodeDescResponse.ECHEC_CODE);
+                genericResponse.setDateResponse(Instant.now());
+                genericResponse.setDescription(ICodeDescResponse.ECHEC_DESCRIPTION);
+                tracking =
+                    createTracking(
+                        tracking,
+                        ICodeDescResponse.ECHEC_CODE,
+                        filiale.getEndPoints(),
+                        result,
+                        commissionRequest.toString(),
+                        genericResponse.getResponseReference()
+                    );
+            }
+        } catch (Exception e) {
+            log.error("exception in getCommission [{}]", e);
+            genericResponse.setCode(ICodeDescResponse.ECHEC_CODE);
+            genericResponse.setDateResponse(Instant.now());
+            genericResponse.setDescription(ICodeDescResponse.FILIALE_ABSENT_DESC + " Message=" + e.getMessage());
+            tracking =
+                createTracking(
+                    tracking,
+                    ICodeDescResponse.ECHEC_CODE,
+                    filiale.getEndPoints(),
+                    e.getMessage(),
+                    commissionRequest.toString(),
+                    genericResponse.getResponseReference()
+                );
+        }
+        trackingService.save(tracking);
+        return genericResponse;
+    }
+
+    public Tracking createTracking(Tracking tracking, String code, String endPoint, String result, String req, String reqId) {
         // Tracking tracking = new Tracking();
         tracking.setCodeResponse(code);
         tracking.setDateResponse(Instant.now());
@@ -228,5 +432,4 @@ public class ApiService {
         tracking.setRequestId(reqId);
         return tracking;
     }
-
 }

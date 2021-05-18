@@ -1,6 +1,7 @@
 package com.boa.api.service;
 
 import com.boa.api.domain.ParamEndPoint;
+import com.boa.api.domain.ParamGeneral;
 import com.boa.api.domain.Tracking;
 import com.boa.api.request.AnnulationRequest;
 import com.boa.api.request.AuthorisationRequest;
@@ -16,6 +17,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.time.Instant;
 import java.util.Map;
+import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,11 +36,20 @@ public class ApiService {
     private final Utils utils;
     private final ParamEndPointService endPointService;
 
-    public ApiService(TrackingService trackingService, UserService userService, Utils utils, ParamEndPointService endPointService) {
+    private final ParamGeneralService paramGeneralService;
+
+    public ApiService(
+        TrackingService trackingService,
+        UserService userService,
+        Utils utils,
+        ParamEndPointService endPointService,
+        ParamGeneralService paramGeneralService
+    ) {
         this.trackingService = trackingService;
         this.userService = userService;
         this.utils = utils;
         this.endPointService = endPointService;
+        this.paramGeneralService = paramGeneralService;
     }
 
     public AuthorisationResponse authorisation(AuthorisationRequest authoRequest, HttpServletRequest request) {
@@ -64,18 +75,31 @@ public class ApiService {
             trackingService.save(tracking);
             return genericResp;
         }
+        Optional<ParamGeneral> optionalPM = paramGeneralService.findByCodeAndPays(ICodeDescResponse.COMPTE_DAP, authoRequest.getCountry());
+        if (!optionalPM.isPresent()) {
+            genericResp.setCode(ICodeDescResponse.FILIALE_ABSENT_CODE);
+            genericResp.setDescription(ICodeDescResponse.COMPTE_DAP_ABSENT);
+            genericResp.setDateResponse(Instant.now());
+            return genericResp;
+        }
 
-        /*GetCommissionRequest commissionRequest = new GetCommissionRequest();
-        commissionRequest.codeOperation(optionalPM.get().getVarString2()).compte(authoRequest.getCompteCardTarget()).country(authoRequest.getCountry())
-        .devise("").montant(Double.valueOf(authoRequest.getMontant())).langue(authoRequest.getLangue());
+        GetCommissionRequest commissionRequest = new GetCommissionRequest();
+        commissionRequest
+            .codeOperation(optionalPM.get().getVarString2())
+            .compte(authoRequest.getCompteEmetteur())
+            .country(authoRequest.getCountry())
+            .devise("")
+            .montant(Double.valueOf(authoRequest.getMontant()))
+            .langue("fr");
         GetCommissionResponse commissionResponse = getCommission(commissionRequest, request);
-        if(commissionResponse==null || commissionResponse.getCode().equals("200")){
-            genericResp = (AuthorisationResponse) clientAbsent(genericResp, tracking, request.getRequestURI(),
-                ICodeDescResponse.ECHEC_CODE, 
-                commissionResponse!=null?commissionResponse.getRMessage():ICodeDescResponse.FRAIS_NON_REMONTEE,
-                    request.getRequestURI(), tab[1]);
-        return genericResp;
-        }*/
+        if (commissionResponse == null || commissionResponse.getCode().equals("200")) {
+            genericResp.setCode(ICodeDescResponse.ECHEC_CODE);
+            genericResp.setDescription(
+                commissionResponse != null ? commissionResponse.getRMessage() : ICodeDescResponse.FRAIS_NON_REMONTEE
+            );
+            genericResp.setDateResponse(Instant.now());
+            return genericResp;
+        }
         try {
             String jsonStr = new JSONObject()
                 .put("montant", authoRequest.getMontant())
@@ -86,7 +110,8 @@ public class ApiService {
                 .put("disponible", authoRequest.getDisponible())
                 .put("valdisponible", authoRequest.getValDisponible())
                 .put("country", authoRequest.getCountry())
-                .put("mntfrais", authoRequest.getMntFrais())
+                //.put("mntfrais", authoRequest.getMntFrais())
+                .put("mntfrais", commissionResponse.getMontantCommission())
                 .put("libelle", authoRequest.getLibelle())
                 .put("compte_crediteur", authoRequest.getCompteCrediteur())
                 .put("codAuto", authoRequest.getCodAuto())

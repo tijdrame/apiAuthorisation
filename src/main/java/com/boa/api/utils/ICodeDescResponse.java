@@ -46,6 +46,8 @@ public interface ICodeDescResponse {
     public static Integer INSTITUTION_ABSENT_CODE = 408;
     public static String INSTITUTION_ABSENT_DESC = "Parametre client Absent";
     public static String FRAIS_NON_REMONTEE = "Frais non remontee.";
+    public static String COMPTE_DAP_ABSENT = "Compte DAP non parametre pour ce pays.";
+    public static String COMPTE_DAP = "COMPTEDAP";
     /*------*/
 
 }

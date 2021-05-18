@@ -44,6 +44,7 @@
     "clientFramework": "angularX",
     "clientTheme": "none",
     "clientThemeVariant": "",
-    "withAdminUi": true
+    "withAdminUi": true,
+    "entities": ["ParamGeneral", "ParamEndPoint"]
   }
 }

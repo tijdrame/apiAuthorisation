@@ -191,7 +191,7 @@ public class ApiService {
             log.error("Exception in authorisation [{}]", e);
             genericResp.setCode(ICodeDescResponse.ECHEC_CODE);
             genericResp.setDateResponse(Instant.now());
-            genericResp.setDescription(ICodeDescResponse.ECHEC_DESCRIPTION);
+            genericResp.setDescription(ICodeDescResponse.ECHEC_DESCRIPTION + e.getMessage());
             tracking =
                 createTracking(
                     tracking,
@@ -310,7 +310,7 @@ public class ApiService {
             log.error("Exception in annulation [{}]", e);
             genericResp.setCode(ICodeDescResponse.ECHEC_CODE);
             genericResp.setDateResponse(Instant.now());
-            genericResp.setDescription(ICodeDescResponse.ECHEC_DESCRIPTION);
+            genericResp.setDescription(ICodeDescResponse.ECHEC_DESCRIPTION + e.getMessage());
             tracking =
                 createTracking(
                     tracking,

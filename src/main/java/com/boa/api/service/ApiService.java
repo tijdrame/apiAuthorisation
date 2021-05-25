@@ -92,7 +92,8 @@ public class ApiService {
             .montant(Double.valueOf(authoRequest.getMontant()))
             .langue("fr");
         GetCommissionResponse commissionResponse = getCommission(commissionRequest, request);
-        if (commissionResponse == null || commissionResponse.getCode().equals("200")) {
+        log.info("resp getcommission in auth [{}]", commissionResponse);
+        if (commissionResponse == null || !commissionResponse.getCode().equals("200")) {
             genericResp.setCode(ICodeDescResponse.ECHEC_CODE);
             genericResp.setDescription(
                 commissionResponse != null ? commissionResponse.getRMessage() : ICodeDescResponse.FRAIS_NON_REMONTEE
